@@ -7,31 +7,86 @@
 // Example: 5! = 5 x 4 x 3 x 2 x 1 = 120
 // factorial(5); // 120
 var factorial = function(n) {
+	if(n === 0) {
+		return 1;
+	} else if(n < 0) {
+		return null;
+	} else {
+		return n * factorial(n - 1);
+	}
 };
 
 // 2. Compute the sum of an array of integers.
 // sum([1,2,3,4,5,6]); // 21
 var sum = function(array) {
+	var index = array.length - 1;
+	if(array.length === 0) {
+		return 0;
+	} else {
+		return array[index] + sum(array.slice(0, index));
+	}
 };
 
 // 3. Sum all numbers in an array containing nested arrays.
 // arraySum([1,[2,3],[[4]],5]); // 15
 var arraySum = function(array) {
+	var index = array.length - 1;
+	if(array.length === 0) {
+		return 0;
+	} else if(Array.isArray(array[index])) {
+		function takeOutOfArray(arr) {
+			for(var i=0; i<arr.length; i++) {
+				if(Array.isArray(arr[i])) {
+					takeOutOfArray(arr[i]);
+				} else {
+					sum += arr[i];
+				}
+			}
+		}
+		var sum = 0;
+		takeOutOfArray(array[index]);
+		return sum + arraySum(array.slice(0, index));
+	} else {
+		return array[index] + arraySum(array.slice(0, index))
+	}
 };
 
 // 4. Check if a number is even.
 var isEven = function(n) {
+	var num = Math.abs(n);
+	if(num === 0) {
+		return true;
+	} else if(num ===1 ){
+		return false;
+	} else {
+		return isEven(num - 2);
+	}
 };
 
 // 5. Sum all integers below a given integer.
 // sumBelow(10); // 45
 // sumBelow(7); // 21
 var sumBelow = function(n) {
+	var num = Math.abs(n);
+	if(num <= 0) {
+		return 0;
+	} else if (n < 0) {
+		return -((num - 1) + sumBelow(num - 1));
+	} else {
+		return (num - 1) + sumBelow(num - 1);
+	}
 };
 
 // 6. Get the integers within a range (x, y).
 // range(2,9); // [3,4,5,6,7,8]
 var range = function(x, y) {
+	if(Math.abs(y - x) === 0 || Math.abs(y - x) === 1) {
+		return [];
+	} else if(y > x) {
+		return [x+1].concat(range(x+1, y));
+	} else {
+		return [x-1].concat(range(x-1, y));
+	}
 };
 
 // 7. Compute the exponent of a number.
@@ -40,6 +95,13 @@ var range = function(x, y) {
 // exponent(4,3); // 64
 // https://www.khanacademy.org/computing/computer-science/algorithms/recursive-algorithms/a/computing-powers-of-a-number
 var exponent = function(base, exp) {
+	if(exp === 0) {
+		return 1;
+	} else if (exp > 0) {
+		return base * exponent(base, exp - 1);
+	} else {
+		return 1 / exponent(base, exp * -1);
+	}
 };
 
 // 8. Determine if a number is a power of two.
@@ -47,14 +109,37 @@ var exponent = function(base, exp) {
 // powerOfTwo(16); // true
 // powerOfTwo(10); // false
 var powerOfTwo = function(n) {
+	if(n === 0) {
+		return false;
+	} else if(n ===1) {
+		return true;
+	} else if(Number.isInteger(n)) {
+		return powerOfTwo(n / 2);
+	} else {
+		return false;
+	}
 };
 
 // 9. Write a function that reverses a string.
 var reverse = function(string) {
+	var maxIndex = string.length - 1;
+	if(string === "") {
+		return "";
+	} else {
+		return string[maxIndex] + reverse(string.slice(0, maxIndex));
+	}
 };
 
 // 10. Write a function that determines if a string is a palindrome.
 var palindrome = function(string) {
+	var lowerString = string.replace(/\s/g, '').toLowerCase();
+	if(lowerString.length === 1 || lowerString.length === 0) {
+		return true;
+	} else if(lowerString[0] === lowerString[lowerString.length -1]) {
+		return palindrome(lowerString.slice(1, lowerString.length-1));
+	} else {
+		return false;
+	}
 };
 
 // 11. Write a function that returns the remainder of x divided by y without using the
@@ -63,16 +148,96 @@ var palindrome = function(string) {
 // modulo(17,5) // 2
 // modulo(22,6) // 4
 var modulo = function(x, y) {
+  if (y === 0) { 
+  	return NaN; 
+  } else if (x < 0) { 
+  	return -modulo(-x,  y); 
+  } else if (y < 0) { 
+  	return  modulo( x, -y); 
+  } else if (x < y) { 
+  	return  x; 
+  } else {
+  	return modulo(x - y, y);
+  }
 };
 
 // 12. Write a function that multiplies two numbers without using the * operator or
 // Math methods.
 var multiply = function(x, y) {
+	if(x === 0 || y === 0) {
+		return 0;
+	} else if(y > 0) {
+		return x + multiply(x, y-1);
+	} else {
+		return -x + multiply(x, y+1);
+	}
 };
 
 // 13. Write a function that divides two numbers without using the / operator or
 // Math methods to arrive at an approximate quotient (ignore decimal endings).
+// var divide = function(x, y) {
+// 	if(y === 0) {
+// 		return NaN;
+// 	} else if(x === 0) {
+// 		return 0;
+// 	} else if(y > 0) {
+// 		if(x >= y) {
+// 			return 1 + divide(x-y, y);
+// 		} else {
+// 			if((x - y) < divide(y, 2)) {
+// 				return 0;
+// 			} else if((x - y) >= divide(y, 2)) {
+// 	        	return 1;
+// 			}
+// 		}
+// 	} else {
+// 		if(x >= -y) {
+// 			return 1 + divide(x+y, y);
+// 		} else {
+// 			if((x + y) < divide(-y, 2)) {
+// 				return 0;
+// 			} else if((x + y) >= divide(-y, 2)) {
+// 				return 1;
+// 			}
+// 		}
+// 	} 
+// };
+
 var divide = function(x, y) {
+	if(y === 0) {
+		return NaN;
+	} else if(x ===0) {
+		return 0;
+	} else {
+		function myAbs(num) {
+			if(num >= 0) {
+				return num;
+			} else {
+				return -num;
+			}
+		}
+		if((x < 0 && y < 0) || (x > 0 && y > 0)) { 
+			if(myAbs(x) >= myAbs(y)) { 
+				return 1 + divide(myAbs(x) - myAbs(y), myAbs(y));
+			} else { 
+				if(myAbs(x) - myAbs(y) < divide(myAbs(y), 2)) {
+					return 0;
+				} else {
+					return 1;
+				}
+			}
+		} else {
+			if(myAbs(x) >= myAbs(y)) { 
+				return -1 + divide(myAbs(x) - myAbs(y), y);
+			} else { 
+				if(myAbs(x) - myAbs(y) < divide(myAbs(y), 2)) {
+					return 0;
+				} else {
+					return -1;
+				}
+			}
+		}
+	}
 };
 
 // 14. Find the greatest common divisor (gcd) of two positive numbers. The GCD of two
@@ -81,13 +246,33 @@ var divide = function(x, y) {
 // http://www.cse.wustl.edu/~kjg/cse131/Notes/Recursion/recursion.html
 // https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/the-euclidean-algorithm
 var gcd = function(x, y) {
+	if(x === 0) {
+		return y;
+	} else if(y === 0) {
+		return x;
+	} else if(x < 0 || y < 0) {
+		return null;
+	}	else {
+		var larger = Math.max(x, y);
+		var smaller = Math.min(x, y);
+		var quotient = Math.floor(larger / smaller);
+		var remainder = larger - (smaller * quotient);	
+		return gcd(smaller, remainder);	
+	}
 };
 
 // 15. Write a function that compares each character of two strings and returns true if
 // both are identical.
 // compareStr('house', 'houses') // false
 // compareStr('tomato', 'tomato') // true
-var compareStr = function(str1, str2) {
+var compareStr = function(str1, str2) { 
+	if(str1 === "" && str2 === "") {
+		return true;
+	} else if(str1[0] === str2[0]){
+		return compareStr(str1.slice(1), str2.slice(1));
+	} else {
+		return false;
+	}
 };
 
 // 16. Write a function that accepts a string and creates an array where each letter
