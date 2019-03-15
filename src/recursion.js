@@ -1,6 +1,6 @@
 /* jshint esversion: 6 */
 
-// utility function
+// utility functions
 function objIsEmpty(object) {
 	for(var key in object) {
 		if(object.hasOwnProperty(key)) {
@@ -8,6 +8,12 @@ function objIsEmpty(object) {
 		}
 	}
 	return true;
+}
+
+function arraysAreEqual(arr1, arr2) {
+  return arr1.every(function(element, i) {
+    return element === arr2[i];
+  });
 }
 // Solve the following prompts using recursion.
 
@@ -490,6 +496,20 @@ var flatten = function(array) {
 // 31. Given a string, return an object containing tallies of each letter.
 // letterTally('potato'); // {p:1, o:2, t:2, a:1}
 var letterTally = function(str, obj) {
+	if(obj === undefined) {
+		obj = {};
+	}
+	if(str === "") {
+		return {};
+	} else {
+		if(obj.hasOwnProperty(str[0])) {
+			obj[str[0]]++;
+		} else {
+			obj[str[0]] = 1;
+		}
+	} 
+	letterTally(str.slice(1), obj);
+	return obj;
 };
 
 // 32. Eliminate consecutive duplicates in a list. If the list contains repeated
@@ -498,18 +518,54 @@ var letterTally = function(str, obj) {
 // compress([1,2,2,3,4,4,5,5,5]) // [1,2,3,4,5]
 // compress([1,2,2,3,4,4,2,5,5,5,4,4]) // [1,2,3,4,2,5,4]
 var compress = function(list) {
+	var compressed = [];
+	if(list.length === 0) {
+		return [];
+	} else {
+		compressed.push(list[0]);
+		var index = 1;
+		while(list[index] === list[0]) {
+			index++;
+		}
+		return compressed.concat(compress(list.slice(index)));
+	}
 };
 
 // 33. Augment every element in a list with a new value where each element is an array
 // itself.
 // augmentElements([[],[3],[7]], 5); // [[5],[3,5],[7,5]]
 var augmentElements = function(array, aug) {
+	var augArr = [];
+	if(array.length === 0) {
+		return [];
+	} else if(aug === undefined) {
+		return array;
+	} else {
+		array[0].push(aug);
+		augArr.push(array[0]);
+		return augArr.concat(augmentElements(array.slice(1), aug));
+	}
 };
 
 // 34. Reduce a series of zeroes to a single 0.
 // minimizeZeroes([2,0,0,0,1,4]) // [2,0,1,4]
 // minimizeZeroes([2,0,0,0,1,0,0,4]) // [2,0,1,0,4]
 var minimizeZeroes = function(array) {
+	var minimized = [];
+	if(array.length === 0) {
+		return [];
+	} else {
+		minimized.push(array[0]);
+		if(array[0] !== 0) {
+			return minimized.concat(minimizeZeroes(array.slice(1)));
+		} else {
+			var index = 1;
+			while(array[index] === 0) {
+				index++;
+			}
+			return minimized.concat(minimizeZeroes(array.slice(index)));
+		}
+	}
 };
 
 // 35. Alternate the numbers in an array between positive and negative regardless of
@@ -517,12 +573,60 @@ var minimizeZeroes = function(array) {
 // alternateSign([2,7,8,3,1,4]) // [2,-7,8,-3,1,-4]
 // alternateSign([-2,-7,8,3,-1,4]) // [2,-7,8,-3,1,-4]
 var alternateSign = function(array) {
+	var alternated = [];
+	function posArray(arr) {
+		return arr.map(function(num) {
+			return Math.abs(num);
+		});
+	}	
+	function negArray(arr) {
+		return arr.map(function(num) {
+			return -Math.abs(num);
+		});
+	}
+	if(array.length === 0) {
+		return [];
+	} else {
+		if(arraysAreEqual(posArray(array), array)) {
+			alternated.push(array[0]);
+			return alternated.concat(alternateSign(negArray(array.slice(1))));
+		} else if(arraysAreEqual(negArray(array), array)) {
+			alternated.push(array[0]);
+			return alternated.concat(alternateSign(posArray(array.slice(1))));
+		} else {
+			alternated.push(posArray(array)[0]);
+			return alternated.concat(alternateSign(negArray(array.slice(1))));
+		}
+	}
 };
 
 // 36. Given a string, return a string with digits converted to their word equivalent.
 // Assume all numbers are single digits (less than 10).
 // numToText("I have 5 dogs and 6 ponies"); // "I have five dogs and six ponies"
 var numToText = function(str) {
+	var returnStr = "";
+	if(str === "") {
+		return "";
+	} else {
+		var wordObj = {
+			0: "zero",
+			1: "one",
+			2: "two",
+			3: "three",
+			4: "four",
+			5: "five",
+			6: "six",
+			7: "seven",
+			8: "eight",
+			9: "nine"
+		};
+		if(wordObj.hasOwnProperty(str[0])) {
+			returnStr += wordObj[str[0]] + numToText(str.slice(1));
+		} else {
+			returnStr += str[0] + numToText(str.slice(1));
+		}
+	}
+	return returnStr;
 };
 
 
