@@ -1,5 +1,14 @@
 /* jshint esversion: 6 */
 
+// utility function
+function objIsEmpty(object) {
+	for(var key in object) {
+		if(object.hasOwnProperty(key)) {
+			return false;
+		}
+	}
+	return true;
+}
 // Solve the following prompts using recursion.
 
 // 1. Calculate the factorial of a number. The factorial of a non-negative integer n,
@@ -327,7 +336,7 @@ var rMap = function(array, callback) {
 // countKeysInObj(obj, 'e') // 2
 var countKeysInObj = function(obj, key) {
 	var count = 0;
-	if(obj === {}) {
+	if(objIsEmpty(obj)) {
 		return 0;
 	} else {
 		for(var k in obj) {
@@ -347,7 +356,7 @@ var countKeysInObj = function(obj, key) {
 // countValuesInObj(obj, 'e') // 1
 var countValuesInObj = function(obj, value) {
 	var count = 0;
-	if(obj === {}) {
+	if(objIsEmpty(obj)) {
 		return 0;
 	} else {
 		for(var k in obj) {
@@ -363,8 +372,8 @@ var countValuesInObj = function(obj, value) {
 
 // 24. Find all keys in an object (and nested objects) by a provided name and rename
 // them to a provided new name while preserving the value stored at that key.
-var replaceKeysInObj = function(obj, oldKey, newKey) {
-	if(obj === {}) {
+var replaceKeysInObj = function(obj, oldKey, newKey) {	
+	if(objIsEmpty(obj)) {
 		return obj;
 	} else {
 		for(var k in obj) {
